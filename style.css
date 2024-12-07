@@ -77,6 +77,12 @@ Theme URI:  http://htmlbeans.com/html/paradise
 	 Form Area Style
 
 ---------------------------------------------------------*/
+.imageies{
+
+  border-radius: 16px
+} 
+
+
 @import url("https://fonts.googleapis.com/css?family=Arizonia|Oswald:300,400,500,600,700|Playfair+Display:400,700|Poppins:300,400,500,600,700,800");
 .clearfix:after {
   content: '';

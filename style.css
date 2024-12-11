@@ -77,10 +77,15 @@ Theme URI:  http://htmlbeans.com/html/paradise
 	 Form Area Style
 
 ---------------------------------------------------------*/
-.imageies{
+/* .imageies{
 
-  border-radius: 16px
-} 
+width: 350px;
+border-radius: 16px;
+height: 350px;
+}  */
+
+
+
 
 
 @import url("https://fonts.googleapis.com/css?family=Arizonia|Oswald:300,400,500,600,700|Playfair+Display:400,700|Poppins:300,400,500,600,700,800");
@@ -6839,7 +6844,7 @@ body {
   position: absolute;
   margin: 0 0 0 -110px;
   border-radius: 100%;
-  border: 10px solid rgba(225, 225, 225, 0.7);
+  /* border: 10px solid rgba(225, 225, 225, 0.7); */
 }
 
 .hb-serviceimg img {
@@ -7062,7 +7067,7 @@ body {
   position: absolute;
   border-radius: 100%;
   margin: 0 0 0 -124px;
-  border: 10px solid #fff;
+  /* border: 10px solid #fff; */
 }
 
 .hb-pricing-img img {
@@ -7136,6 +7141,90 @@ body {
 /* =============================================
 			Gallery Area Style					
 ============================================= */
+
+.hb-gallery-area {
+  float: left;
+  width: 100%;
+  display: flex; /* Enable flexbox */
+  flex-wrap: wrap; /* Allow items to wrap into new lines */
+  gap: 15px; /* Space between items */
+  justify-content: center; /* Center images horizontally */
+}
+
+.hb-galleryimg {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%; /* Full width of the container */
+  max-width: 300px; /* Set max-width for each image to make it uniform */
+  flex: 1; /* Allow flexibility but within the max-width */
+  margin-left: 0; /* Remove any left margin */
+  margin-right: 0; /* Remove any right margin */
+}
+
+.hb-galleryimg img {
+  width: 100%; /* Ensure the image takes full width of the container */
+  height: 300px; /* Fixed height for uniformity */
+  object-fit: cover; /* Ensures the image covers the container while maintaining aspect ratio */
+  display: block;
+  margin: 0 auto; /* Center images */
+  border-radius: 5px; /* Optional: Rounded corners */
+  cursor: pointer; /* Indicate clickable images */
+}
+
+.hb-gallerycontent {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .hb-gallery-area {
+    display: flex; /* Keep flexbox layout for smaller screens */
+    flex-direction: column; /* Stack items vertically */
+    align-items: center; /* Center items horizontally */
+    gap: 15px; /* Space between items */
+    padding-left: 0; /* Ensure no padding on the left */
+    padding-right: 0; /* Ensure no padding on the right */
+  }
+
+  .hb-galleryimg {
+    width: 100%; /* Full width on smaller screens */
+    max-width: 100%; /* Remove max-width to use full container width */
+    margin-bottom: 20px; /* Space between images */
+  }
+}
+
+
+/* Lightbox Modal */
+.lightbox-modal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  z-index: 9999;
+  padding-top: 50px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.lightbox-content {
+  margin: auto;
+  display: block;
+  width: 80%;
+  max-width: 700px;
+}
+
+.close {
+  position: absolute;
+  top: 15px;
+  right: 35px;
+  color: #fff;
+  font-size: 40px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+
+/* 
 .hb-gallery-area {
   float: left;
   width: 100%;
@@ -7265,7 +7354,7 @@ body {
 
 .hb-roundicon li .hb-g-icon.change-bg i {
   color: #fff;
-}
+} */
 
 /* =============================================
 			Appointment Area Style					

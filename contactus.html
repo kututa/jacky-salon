@@ -228,37 +228,42 @@
 										</div>
 									</div>
 								</div>
+								<!-- contact form  -->
 								<div class="hb-formtheme hb-contactusform">
-									<form id="contactForm" data-toggle="validator">
+									<form id="contactForm" method="POST" action="submit-form.php">
 										<fieldset>
 											<div class="col-xs-12 col-sm-12 col-md-4">
 												<div class="form-group">
-													<input type="text" id="txtname" class="form-control" name="name" placeholder="Name" required>
+													<input type="text" class="form-control" name="name" placeholder="Name" required>
 												</div>
 											</div>
 											<div class="col-xs-12 col-sm-12 col-md-4">
 												<div class="form-group">
-													<input type="email" id="txtemail" class="form-control" name="email" placeholder="Email" required>
+													<input type="email" class="form-control" name="email" placeholder="Email" required>
 												</div>
 											</div>
 											<div class="col-xs-12 col-sm-12 col-md-4">
 												<div class="form-group">
-													<input type="text" id="txtphone" class="form-control" name="phone" placeholder="Phone" required>
+													<input type="text" class="form-control" name="phone" placeholder="Phone" required>
 												</div>
 											</div>
 											<div class="col-xs-12 col-sm-12">
 												<div class="form-group">
-													<textarea class="form-control" id="txtmessage" name="message" placeholder="Message" required></textarea>
+													<textarea class="form-control" name="message" placeholder="Message" required></textarea>
 												</div>
 											</div>
+											<input type="hidden" name="form_type" value="contact">
 											<div class="col-xs-12 col-sm-12">
 												<div class="form-group">
-													<button type="submit" class="hb-btn" id="form-submit">Send Message</button>
+													<button type="submit" class="hb-btn">Send Message</button>
 												</div>
 											</div>
 										</fieldset>
 									</form>
 								</div>
+								
+								
+								<!-- contact form end -->
 							</div>
 						</div>
 					</div>
@@ -299,7 +304,7 @@
 								<ul class="list-unstyled hb-info">
 									<li><span>+254703603744<a href="mailto:info.deercreative@gmail.com">info@jackysalon.com</a></span>
 									</li>
-									<li><span>Kenyatta Market stall 57<em>Nairobi Kenya</em></span></li>
+									<li><span>We are located at Kenyatta Market opposite mbagathi hospital.you can call or Whatsapp 0703603744<em>Nairobi Kenya</em></span></li>
 								</ul>
 							</div>
 						</div>

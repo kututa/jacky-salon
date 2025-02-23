@@ -1,4 +1,4 @@
-<?php 
+<?php
 // Include PHPMailer
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -8,41 +8,67 @@ require 'vendor/autoload.php';
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "jacky_salon"; // Replace with your database name
+$dbname = "jacky_salon"; // Replace with your actual database name
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 
 // Check connection
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    die("<script>alert('Database connection failed!');</script>");
 }
 
+// Handle form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Common fields
-    $name = $_POST['name'] ?? '';
+    // Retrieve common form fields
+    $name  = $_POST['name']  ?? '';
     $phone = $_POST['phone'] ?? '';
     $email = $_POST['email'] ?? '';
 
-    $form_type = ''; // Determine form type
+    $form_type = ''; // Stores 'appointment' or 'contact'
     $sql = '';       // SQL query placeholder
-    $message = '';   // Initialize message for email
+    $email_subject = '';
+    $email_body = '';
 
     if (!empty($_POST['service']) && !empty($_POST['date']) && !empty($_POST['time'])) {
-        // Appointment form
+        // Appointment Form Submission
         $service = $_POST['service'];
-        $date = $_POST['date'];
-        $time = $_POST['time'];
+        $date    = $_POST['date'];
+        $time    = $_POST['time'];
         $form_type = 'appointment';
 
+        // Insert into database
         $sql = "INSERT INTO submissions (name, phone, email, service, preferred_date, preferred_time, form_type)
                 VALUES ('$name', '$phone', '$email', '$service', '$date', '$time', '$form_type')";
-    } elseif (!empty($_POST['message'])) {
-        // Contact form
-        $message = $_POST['message'];
-        $form_type = 'contact';
 
-        $sql = "INSERT INTO submissions (name, phone, email, message, form_type)
-                VALUES ('$name', '$phone', '$email', '$message', '$form_type')";
+        // Email to client
+        $email_subject = "Appointment Confirmation - Jacky Salon";
+        $email_body = "
+            <div style='font-family: Arial, sans-serif; padding: 15px; border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); background-color: #f8f9fa;'>
+                <h2 style='color:rgb(245, 72, 236);'>Appointment Confirmed</h2>
+                <p>Hello <strong>$name</strong>,</p>
+                <p>Your appointment has been successfully booked.</p>
+                <p><strong>Service:</strong> $service</p>
+                <p><strong>Date:</strong> $date</p>
+                <p><strong>Time:</strong> $time</p>
+                <p style='color: #333;'>We look forward to serving you!</p>
+                <br>
+                <p style='color: #777;'>Best Regards,<br><strong>Jacky Salon Team</strong></p>
+            </div>
+        ";
+
+        // Email to salon
+        $salon_subject = "New Appointment Booking - Jacky Salon";
+        $salon_body = "
+            <div style='font-family: Arial, sans-serif; padding: 15px; border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); background-color: #f8f9fa;'>
+                <h2 style='color:rgb(245, 43, 235);'>New Appointment Booking</h2>
+                <p><strong>Name:</strong> $name</p>
+                <p><strong>Phone:</strong> $phone</p>
+                <p><strong>Email:</strong> $email</p>
+                <p><strong>Service:</strong> $service</p>
+                <p><strong>Date:</strong> $date</p>
+                <p><strong>Time:</strong> $time</p>
+            </div>
+        ";
     }
 
     // Execute SQL query
@@ -50,47 +76,55 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Send email using PHPMailer
         $mail = new PHPMailer(true);
         try {
-            // Server settings
+            // SMTP Configuration
             $mail->isSMTP();
-            $mail->Host = 'smtp.gmail.com'; // SMTP server
-            $mail->SMTPAuth = true;
-            $mail->Username = 'your_email@gmail.com'; // Your email
-            $mail->Password = 'your_email_password'; // Your email password
+            $mail->Host       = 'acutis.webhostultima.com'; // SMTP Host
+            $mail->SMTPAuth   = true;
+            $mail->Username   = 'info@jackysalon.co.ke'; // SMTP Username
+            $mail->Password   = 'Jackysalon@0360'; // SMTP Password
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-            $mail->Port = 587;
+            $mail->Port       = 587;
 
-            // Recipient settings
-            $mail->setFrom('your_email@gmail.com', 'Jacky Salon');
-            $mail->addAddress($email); // Client email
+            // Fix SSL certificate verification (if needed)
+            $mail->SMTPOptions = array(
+                'ssl' => array(
+                    'verify_peer'       => false,
+                    'verify_peer_name'  => false,
+                    'allow_self_signed' => true
+                )
+            );
 
-            // Content
+            // Sender Info
+            $mail->setFrom('info@jackysalon.co.ke', 'Jacky Salon');
+            $mail->addReplyTo('info@jackysalon.co.ke', 'Jacky Salon');
+
+            // Send email to the client
+            $mail->addAddress($email); 
             $mail->isHTML(true);
-            if ($form_type == 'appointment') {
-                $mail->Subject = 'Appointment Confirmation';
-                $mail->Body = "<p>Hello $name,</p>
-                               <p>Your appointment at Jacky Salon has been booked successfully.</p>
-                               <p>Service: $service</p>
-                               <p>Date: $date</p>
-                               <p>Time: $time</p>
-                               <p>We look forward to serving you!</p>";
-            } elseif ($form_type == 'contact') {
-                $mail->Subject = 'Contact Form Submission';
-                $mail->Body = "<p>You have a new contact form submission:</p>
-                               <p>Name: $name</p>
-                               <p>Email: $email</p>
-                               <p>Phone: $phone</p>
-                               <p>Message: $message</p>";
-            }
-
+            $mail->Subject = $email_subject;
+            $mail->Body    = $email_body;
             $mail->send();
-            echo 'Form submitted successfully and email sent!';
+
+            // Send email to the salon
+            $mail->clearAddresses(); 
+            $mail->addAddress('info@jackysalon.co.ke'); 
+            $mail->Subject = $salon_subject;
+            $mail->Body    = $salon_body;
+            $mail->send();
+
+            // Success Message & Redirect to Home
+            echo "<script>
+                alert('Form submitted successfully! A confirmation email has been sent.');
+                window.location.href = 'index.html'; // Redirects to homepage
+            </script>";
         } catch (Exception $e) {
-            echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+            echo "<script>alert('Message could not be sent. Error: {$mail->ErrorInfo}');</script>";
         }
     } else {
-        echo "Error: " . $conn->error;
+        echo "<script>alert('Database error: " . $conn->error . "');</script>";
     }
 }
 
+// Close database connection
 $conn->close();
 ?>
